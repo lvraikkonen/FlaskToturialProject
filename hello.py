@@ -4,6 +4,7 @@ from flask import Flask
 from flask import request
 # 动态生成url
 from flask import url_for
+from flask import render_template
 
 app = Flask(__name__)
 
@@ -30,11 +31,6 @@ def show_the_login_form():
     return "Showing login form..."
 
 
-@app.route('/hello/<user_name>')
-def hello_someone(user_name):
-    return "Hello %s" % user_name
-
-
 @app.route('/post/<int:post_id>')
 def show_post(post_id):
     return "Post %d" % post_id
@@ -45,11 +41,16 @@ def sum_param(x, y):
     return "%d + %d = %d" % (x, y, x+y)
 
 
+@app.route('/hello/')
+@app.route('/hello/<user_name>')
+def hello(user_name = None):
+    return render_template('hello_user.html', name=user_name)
+
+
 with app.test_request_context():
     print url_for('index')
     print url_for('login')
     print url_for('login', next='/')
-    print url_for('hello_someone', user_name='John Doe')
     print url_for('show_post', post_id=123)
     print url_for('sum_param', x=1, y=2)
 
