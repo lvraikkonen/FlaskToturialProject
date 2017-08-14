@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='hello.css') }}" />
+{% endblock %}
+
 {% block title %}Flasky - Page not found{% endblock %}
 
 {% block page_content %}
