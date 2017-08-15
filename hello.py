@@ -3,16 +3,26 @@
 from flask import Flask
 from flask import request
 # 动态生成url
-from flask import url_for
+from flask import url_for, session, redirect, flash
 from flask import render_template
 
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from datetime import datetime
 
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Length, Email
+
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 moment = Moment(app)
+app.config['SECRET_KEY'] = 'DontTellAnyone'
+
+
+class NameForm(FlaskForm):
+    name = StringField("What's your name?", validators=[DataRequired()])
+    submit = SubmitField('Submit')
 
 
 @app.route('/')
@@ -37,6 +47,19 @@ def show_the_login_form():
     return "Showing login form..."
 
 
+@app.route('/hello_somebody', methods=['GET', 'POST'])
+def hello_somebody():
+    name = None
+    form = NameForm()
+    if form.validate_on_submit():
+        old_name = session.get('name')
+        if old_name is not None and old_name != form.name.data:
+            flash("Looks like you have changed your name!")
+        session['name'] = form.name.data
+        return redirect(url_for('hello_somebody'))
+    return render_template('userform_index.html', form=form, name=session.get('name'))
+
+
 @app.route('/sum/<int:x>/<int:y>')
 def sum_param(x, y):
     return "%d + %d = %d" % (x, y, x+y)
@@ -44,7 +67,9 @@ def sum_param(x, y):
 
 @app.route('/hello/')
 @app.route('/hello/<user_name>')
-def hello(user_name = None):
+def hello(user_name=None):
+    if user_name is None:
+        user_name = 'Stranger'
     return render_template('user.html', name=user_name)
 
 
