@@ -16,6 +16,7 @@ flask-bootstrap = "*"
 flask-moment = "*"
 flask-wtf = "*"
 python-dotenv = "*"
+bootstrap-flask = "*"
 
 [requires]
 python_version = "3.7"
