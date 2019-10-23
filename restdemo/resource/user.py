@@ -1,19 +1,8 @@
-from flask import Flask, jsonify, request
-from flask_restful import Resource, Api, reqparse
-
-
-app = Flask(__name__)
-api = Api(app)
-
+from flask_restful import Resource, reqparse
 
 # sample user data list
 user_list = [{'username': "aaa", "password": "123"}]
 
-
-class Users(Resource):
-
-    def get(self):
-        return user_list
 
 class User(Resource):
 
@@ -36,7 +25,6 @@ class User(Resource):
         create a user
         :return:
         """
-        print(request.get_json())
         data = User.parser.parse_args()
         user = {
             'username': username,
@@ -84,9 +72,7 @@ class User(Resource):
             return {'message': f"user {username} not found."}, 204
 
 
-api.add_resource(Users, '/users')
-api.add_resource(User, '/user/<string:username>')
+class Users(Resource):
 
-
-if __name__ == '__main__':
-    app.run()
+    def get(self):
+        return user_list
