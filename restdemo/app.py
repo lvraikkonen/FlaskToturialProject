@@ -1,15 +1,31 @@
+import os
 from flask import Flask
 from flask_restful import Api
-from resource.user import User, Users
+from restdemo.settings import config
+from restdemo.extensions import db
+from restdemo.resource.user import User, Users
+
+from flask_migrate import Migrate
 
 
-app = Flask(__name__)
-api = Api(app)
+
+def create_app(config_name=None):
+    if config_name is None:
+        # config_name = os.get_env('FLASK_CONFIG', 'development')
+        config_name = 'development'
+
+    app = Flask(__name__)
+    app.config.from_object(config[config_name])
+
+    register_extensions(app)
+
+    return app
 
 
-api.add_resource(Users, '/users')
-api.add_resource(User, '/user/<string:username>')
+def register_extensions(app):
+    db.init_app(app)
+    api = Api(app)
+    migrate = Migrate(app, db)
 
-
-if __name__ == '__main__':
-    app.run()
+    api.add_resource(Users, '/users')
+    api.add_resource(User, '/user/<string:username>')
