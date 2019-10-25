@@ -2,7 +2,9 @@ from flask import Flask
 from flask_restful import Api
 from restdemo.settings import config
 from restdemo.extensions import db, jwt
+
 from restdemo.resource.user import User, Users
+from restdemo.resource.tweet import Tweet
 # from restdemo.resource.auth import Login
 
 from flask_migrate import Migrate
@@ -31,3 +33,4 @@ def register_extensions(app):
     api.add_resource(Users, '/users')
     api.add_resource(User, '/user/<string:username>')
     # api.add_resource(Login, '/auth/login')
+    api.add_resource(Tweet, '/tweet/<string:username>')
