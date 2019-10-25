@@ -1,7 +1,7 @@
 from restdemo.model.user import User as UserModel
 from flask_restful import Resource, reqparse
-from flask import request
-import jwt
+
+from flask_jwt import jwt_required
 
 
 class User(Resource):
@@ -73,19 +73,22 @@ class User(Resource):
 
 class Users(Resource):
 
+    @jwt_required()
     def get(self):
-        token = request.headers.get('Authorization_token')
-        try:
-            jwt.decode(
-                token,
-                'secret_key',
-                algorithms='HS256'
-            )
-        except jwt.ExpiredSignature:
-            # the token is expired
-            return {"message": "Token expired, please login to get a new token"}
-        except jwt.InvalidTokenError:
-            return {"message": "Invalid token, please register or login"}
+        # token = request.headers.get('Authorization_token')
+        # try:
+        #     jwt.decode(
+        #         token,
+        #         'secret_key',
+        #         algorithms='HS256'
+        #     )
+        # except jwt.ExpiredSignature:
+        #     # the token is expired
+        #     return {"message": "Token expired, please login to get a new token"}
+        # except jwt.InvalidTokenError:
+        #     return {"message": "Invalid token, please register or login"}
+
+
         # using valid token to get all user
         users = UserModel.get_user_list()
         return [u.as_dict() for u in users]
