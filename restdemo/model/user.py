@@ -2,7 +2,6 @@ from restdemo.extensions import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 
-
 from datetime import datetime, timedelta
 
 
@@ -72,18 +71,3 @@ class User(db.Model):
         except Exception as e:
             # return error
             return str(e)
-
-    @staticmethod
-    def authenticate(username, password):
-        user = User.get_by_username(username)
-        if user:
-            # check password
-            if user.check_password(password):
-                return user
-            # else auth failed
-
-    @staticmethod
-    def identity(payload):
-        user_id = payload['identity']
-        user = User.get_by_id(user_id)
-        return user

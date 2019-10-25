@@ -1,9 +1,10 @@
+import os
 from flask import Flask
 from flask_restful import Api
 from restdemo.settings import config
-from restdemo.extensions import db, jwt
+from restdemo.extensions import db
 from restdemo.resource.user import User, Users
-# from restdemo.resource.auth import Login
+from restdemo.resource.auth import Login
 
 from flask_migrate import Migrate
 
@@ -24,10 +25,9 @@ def create_app(config_name=None):
 
 def register_extensions(app):
     db.init_app(app)
-    jwt.init_app(app)
     api = Api(app)
     migrate = Migrate(app, db)
 
     api.add_resource(Users, '/users')
     api.add_resource(User, '/user/<string:username>')
-    # api.add_resource(Login, '/auth/login')
+    api.add_resource(Login, '/auth/login')
