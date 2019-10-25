@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
@@ -17,7 +18,9 @@ class BaseConfig:
 
 
 class DevelopmentConfig(BaseConfig):
-    pass
+    JWT_EXPIRATION_DELTA = timedelta(seconds=300)
+    JWT_AUTH_URL_RULE = '/auth/login'
+    JWT_AUTH_HEADER_PREFIX = 'AUTH'
 
 
 class ProductionConfig(BaseConfig):
