@@ -1,5 +1,8 @@
 from restdemo.extensions import db
 from werkzeug.security import generate_password_hash, check_password_hash
+import jwt
+
+from datetime import datetime, timedelta
 
 
 class User(db.Model):
@@ -46,3 +49,25 @@ class User(db.Model):
     @staticmethod
     def get_user_list():
         return db.session.query(User).all()
+
+    def generate_token(self):
+        """
+        generate the access token
+        :return:
+        """
+        try:
+            payload = {
+                'exp': datetime.utcnow() + timedelta(minutes=5),
+                'iat': datetime.utcnow(),
+                'sub': self.username
+            }
+            # create the byte token
+            jwt_token = jwt.encode(
+                payload,
+                'secret_key',
+                algorithm='HS256'
+            )
+            return jwt_token.decode()
+        except Exception as e:
+            # return error
+            return str(e)
