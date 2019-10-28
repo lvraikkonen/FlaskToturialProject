@@ -20,7 +20,7 @@ class Tweet(Resource):
         data = Tweet.parser.parse_args()
         tweet = TweetModel(body=data.get('body'), user_id=user.id)
         tweet.add()
-        return {'message': 'tweet posted. Please check'}
+        return {'message': 'post success'}
 
     @jwt_required()
     def get(self, username):

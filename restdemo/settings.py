@@ -16,11 +16,13 @@ class BaseConfig:
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///' + os.path.join(basedir, 'data.db'))
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    JWT_AUTH_URL_RULE = '/auth/login'
+    JWT_AUTH_HEADER_PREFIX = 'AUTH'
+
 
 class DevelopmentConfig(BaseConfig):
     JWT_EXPIRATION_DELTA = timedelta(seconds=300)
-    JWT_AUTH_URL_RULE = '/auth/login'
-    JWT_AUTH_HEADER_PREFIX = 'AUTH'
+    DEBUG = True
 
 
 class ProductionConfig(BaseConfig):
@@ -29,7 +31,7 @@ class ProductionConfig(BaseConfig):
 
 class TestingConfig(BaseConfig):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
     WTF_CSRF_ENABLED = False
 
 

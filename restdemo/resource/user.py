@@ -65,6 +65,7 @@ class User(Resource):
         if user:
             data = User.parser.parse_args()
             user.password_hash = data.get('password')
+            user.email = data.get('email')
             user.update()
             return user.as_dict()
         else:
